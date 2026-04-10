@@ -45,7 +45,12 @@ namespace Xilium.CefGlue.Avalonia.Platform
         {
             Dispatcher.UIThread.Post(() =>
             {
-                _popup.Show(_popup.PlacementTarget.GetVisualRoot() as Window);
+                var owner = _popup.PlacementTarget.GetPresentationSource()?.RootVisual as Window;
+                if (owner is null)
+                {
+                    return;
+                }
+                _popup.Show(owner);
             });
         }
 

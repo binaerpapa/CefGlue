@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <PackageReference PrivateAssets="all" Include="Avalonia" />
-    <PackageReference Include="Avalonia.ReactiveUI" />
+    <PackageReference Include="ReactiveUI.Avalonia" />
     <PackageReference Include="System.Reactive.Linq" />
   </ItemGroup>
 

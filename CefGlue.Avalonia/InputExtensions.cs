@@ -1,6 +1,8 @@
 using System.IO;
+using System.Linq;
 using Avalonia;
 using Avalonia.Input;
+using Avalonia.Platform.Storage;
 using Avalonia.VisualTree;
 
 namespace Xilium.CefGlue.Avalonia
@@ -201,20 +203,20 @@ namespace Xilium.CefGlue.Avalonia
             var dragData = CefDragData.Create();
 
             // Files
-            if (e.Data.Contains(DataFormats.FileNames))
+            if (e.DataTransfer.Contains(DataFormat.File)) // bevor DataFormats.FileNames but there is no filenames any more so text?
             {
-                var files = (string[])e.Data.GetFileNames();
+                var files = e.DataTransfer.TryGetFiles() ?? Enumerable.Empty<IStorageItem>();
                 foreach (var filePath in files)
                 {
-                    var displayName = Path.GetFileName(filePath);
-                    dragData.AddFile(filePath.Replace("\\", "/"), displayName);
+                    var displayName = Path.GetFileName(filePath.Name);
+                    dragData.AddFile(filePath.Path.AbsolutePath.Replace("\\", "/"), displayName);
                 }
             }
 
             // Text
-            if (e.Data.Contains(DataFormats.Text))
+            if (e.DataTransfer.Contains(DataFormat.Text))
             {
-                dragData.SetFragmentText(e.Data.GetText());
+                dragData.SetFragmentText(e.DataTransfer.TryGetText());
             }
 
             return dragData;
